@@ -11,6 +11,7 @@ fn main() {
 
     if args.len() != 2 {
         println!("usage: {} filename.txt", args[0]);
+        return;
     }
 
     let file = File::open(&args[1]).expect("Cannot open input file");
