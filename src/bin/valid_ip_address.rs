@@ -3,14 +3,17 @@ use std::net::IpAddr;
 use std::process::exit;
 
 fn main() {
-    let program_name = env::args().nth(0).unwrap();
+    let mut args = env::args();
+    let program_name = args.next();
 
-    if let Some(addr) = env::args().nth(1) {
-        match addr.parse::<IpAddr>() {
-            Err(_) => exit(1),
-            Ok(_) => exit(0),
+    if let Some(addr) = args.next() {
+        if addr.parse::<IpAddr>().is_ok() {
+            exit(0);
+        } else {
+            exit(1);
         }
     } else {
-        println!("usage: {:?} <ip_address>", program_name);
+        println!("usage: {:?} <ip_address>", program_name.unwrap());
+        exit(1);
     }
 }
