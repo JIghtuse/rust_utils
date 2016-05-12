@@ -1,26 +1,37 @@
+#![cfg_attr(feature="clippy", feature(plugin))]
+#![cfg_attr(feature="clippy", plugin(clippy))]
 extern crate rand;
 
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::env;
+use std::process;
+use std::path::Path;
 use rand::Rng;
+
+fn get_random_line<P: AsRef<Path>>(filename: P) -> Option<String> {
+    if let Ok(file) = File::open(filename) {
+        let lines = BufReader::new(file).lines();
+        let lines : Vec<String> = lines.map(|line| line.unwrap()).collect();
+        rand::thread_rng().choose(&lines).cloned()
+    } else {
+        None
+    }
+}
 
 // Prints random line from a file
 fn main() {
-    let args : Vec<String> = env::args().collect();
+    let mut args = env::args();
+    let program_name = args.next();
 
-    if args.len() != 2 {
-        println!("usage: {} filename.txt", args[0]);
-        return;
-    }
-
-    let file = File::open(&args[1]).expect("Cannot open input file");
-    let lines = BufReader::new(file).lines();
-    let lines : Vec<String> = lines.map(|line| line.expect("no line")).collect();
-
-    if let Some(line) = rand::thread_rng().choose(&lines) {
-        println!("{}", line);
+    if let Some(input_file) = args.next() {
+        if let Some(line) = get_random_line(&input_file) {
+            println!("{}", line);
+        } else {
+            println!("[ERROR] cannot get random line from file {}", input_file);
+        }
     } else {
-        panic!("cannot get random line from input file");
+        println!("usage: {} filename.txt", program_name.unwrap());
+        process::exit(1);
     }
 }
