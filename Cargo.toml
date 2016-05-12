@@ -5,4 +5,7 @@ authors = ["Boris Egorov <egorov@linux.com>"]
 
 [dependencies]
 rand = "*"
-clippy = "*"
+clippy = { version = "*", optional = true }
+
+[features]
+default = []
