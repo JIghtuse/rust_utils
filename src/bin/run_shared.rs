@@ -6,9 +6,9 @@ use libloading::{Library, Symbol};
 
 fn execute(library_path: &str, function: &str, argument: f64) -> Result<f64, std::io::Error> {
     let lib = try!(Library::new(library_path));
-    let sin: Symbol<extern "C" fn(f64) -> f64> = unsafe { try!(lib.get(function.as_bytes())) };
+    let f: Symbol<extern "C" fn(f64) -> f64> = unsafe { try!(lib.get(function.as_bytes())) };
 
-    Ok(sin(argument))
+    Ok(f(argument))
 }
 
 fn main() {
