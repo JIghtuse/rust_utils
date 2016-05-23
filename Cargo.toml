@@ -5,6 +5,7 @@ authors = ["Boris Egorov <egorov@linux.com>"]
 
 [dependencies]
 rand = "*"
+libloading = "0.2"
 clippy = { version = "*", optional = true }
 
 [features]
