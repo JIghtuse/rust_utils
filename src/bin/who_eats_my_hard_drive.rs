@@ -24,9 +24,8 @@ fn show_fedora_packages() {
     command.arg("--queryformat");
     command.arg("%10{size} - %-25{name} \t %{version}\n");
 
-    match command.spawn() {
-        Err(e) => println!("ERROR running rpm: {:?}", e),
-        _ => ()
+    if let Err(e) = command.spawn() {
+        println!("ERROR running rpm: {:?}", e);
     }
 }
 
@@ -38,9 +37,8 @@ fn show_debian_packages() {
     command.arg("--showformat");
     command.arg("${Installed-Size}\t${Package}\n");
 
-    match command.spawn() {
-        Err(e) => println!("ERROR running dpkg-query: {:?}", e),
-        _ => ()
+    if let Err(e) = command.spawn() {
+        println!("ERROR running dpkg-query: {:?}", e);
     }
 }
 
