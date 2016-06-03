@@ -1,5 +1,7 @@
 extern crate rs_release;
 
+use std::process::Command;
+
 #[derive(Debug)]
 enum Error {
     UnknownOs,
@@ -13,10 +15,33 @@ fn get_os_id() -> Result<String, Error> {
     }
 }
 
+// https://blog.tinned-software.net/show-installed-yum-packages-by-size/
 fn show_fedora_packages() {
+    let mut command = Command::new("rpm");
+
+    command.arg("--query");
+    command.arg("--all");
+    command.arg("--queryformat");
+    command.arg("%10{size} - %-25{name} \t %{version}\n");
+
+    match command.spawn() {
+        Err(e) => println!("ERROR running rpm: {:?}", e),
+        _ => ()
+    }
 }
 
+// http://www.commandlinefu.com/commands/view/3842/list-your-largest-installed-packages-on-debianubuntu
 fn show_debian_packages() {
+    let mut command = Command::new("dpkg-query");
+
+    command.arg("--show");
+    command.arg("--showformat");
+    command.arg("${Installed-Size}\t${Package}\n");
+
+    match command.spawn() {
+        Err(e) => println!("ERROR running dpkg-query: {:?}", e),
+        _ => ()
+    }
 }
 
 fn main() {
